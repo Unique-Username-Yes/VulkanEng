@@ -32,7 +32,7 @@ private:
 	}
 	void InitVulkan()
 	{
-
+		CreateInstance();
 	}
 	void MainLoop()
 	{
@@ -47,7 +47,33 @@ private:
 
 		glfwTerminate();
 	}
+	void CreateInstance()
+	{
+		VkApplicationInfo appInfo = {};
+		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+		appInfo.pApplicationName = "TriangleHi";
+		appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+		appInfo.pEngineName = "No Engine";
+		appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+		appInfo.apiVersion = VK_API_VERSION_1_0;
 
+		VkInstanceCreateInfo createInfo = {};
+		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+		createInfo.pApplicationInfo = &appInfo;
+
+		uint32_t glfwExtensionCount = 0;
+		const char **glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+		createInfo.enabledExtensionCount = glfwExtensionCount;
+		createInfo.ppEnabledExtensionNames = glfwExtensions;
+		createInfo.enabledLayerCount = 0;
+
+		if (auto err = vkCreateInstance(&createInfo, nullptr, &instance); err != VK_SUCCESS)
+		{
+			throw std::runtime_error("Failed to create instance. Error code: " + err);
+		}
+	}
+	VkInstance instance;
 	GLFWwindow *window;
 };
 
