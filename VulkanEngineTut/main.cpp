@@ -21,6 +21,9 @@ public:
 	}
 
 private:
+	VkInstance instance;
+	GLFWwindow *window;
+
 	void InitWindow()
 	{
 		glfwInit();
@@ -43,6 +46,8 @@ private:
 	}
 	void CleanUp()
 	{
+		vkDestroyInstance(instance, nullptr);
+
 		glfwDestroyWindow(window);
 
 		glfwTerminate();
@@ -72,9 +77,17 @@ private:
 		{
 			throw std::runtime_error("Failed to create instance. Error code: " + err);
 		}
+
+		uint32_t extensionCount = 0;
+		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+		std::vector<VkExtensionProperties>extensions(extensionCount);
+		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
+		std::cout << "Available extensions:" << std::endl;
+		for (const auto &extension : extensions)
+		{
+			std::cout << "\t" << extension.extensionName << " VER: " << extension.specVersion << std::endl;
+		}
 	}
-	VkInstance instance;
-	GLFWwindow *window;
 };
 
 int main()
