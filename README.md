@@ -1,2 +1,2 @@
-# VulkanEng
-Basic Vulkan engine for 2D games
+# Vulkan Renderer
+Basic Vulkan Renderer for introeduction to Vulkan API
